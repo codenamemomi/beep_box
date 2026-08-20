@@ -23,8 +23,7 @@ BeepBox units carry and deliver small packages to remote locations. This REST se
 3. **Item Input Validation**:
    - **Item Name**: Allowed characters are letters, numbers, hyphen `-`, and underscore `_` (`^[a-zA-Z0-9\-_]+$`).
    - **Item Code**: Allowed characters are uppercase letters, numbers, and underscore `_` (`^[A-Z0-9_]+$`).
-4. **Reference Code Constraint & Auto-Generation**: Box `txref` is unique and limited to 20 characters maximum. If omitted during registration (`POST /api/v1/boxes`), a unique `txref` is automatically generated (e.g. `BOX-8F3A2B1C9D`).
-5. **Automatic ID & TXREF Generation**: Primary Key IDs (`id`) for Boxes and Items, as well as Box `txref` references, are automatically assigned by the service. Duplicate `txref` registrations are strictly rejected (`DuplicateTxrefException`).
+4. **Txref Auto-Generation**: If omitted during registration, a unique `txref` is generated automatically (e.g. `BOX-8F3A2B1C9D`). Box `txref` is unique (max 20 characters) and duplicate `txref` values are rejected.
 
 ---
 
