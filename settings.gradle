@@ -1,0 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://repo1.maven.org/maven2/' }
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url 'https://repo1.maven.org/maven2/' }
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'beep_box'
