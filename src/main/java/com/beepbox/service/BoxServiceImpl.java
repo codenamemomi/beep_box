@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +27,17 @@ public class BoxServiceImpl implements BoxService {
 
     @Override
     public BoxDto createBox(BoxDto boxDto) {
-        if (boxRepository.existsByTxref(boxDto.getTxref())) {
-            throw new DuplicateTxrefException(boxDto.getTxref());
+        String txref = boxDto.getTxref();
+        if (txref == null || txref.trim().isEmpty()) {
+            txref = generateUniqueTxref();
+        } else {
+            txref = txref.trim();
+            if (txref.length() > 20) {
+                throw new IllegalArgumentException("Box txref must not exceed 20 characters");
+            }
+            if (boxRepository.existsByTxref(txref)) {
+                throw new DuplicateTxrefException(txref);
+            }
         }
 
         if (boxDto.getWeightLimit() > 500.0) {
@@ -42,7 +52,7 @@ public class BoxServiceImpl implements BoxService {
         }
 
         Box box = new Box(
-                boxDto.getTxref(),
+                txref,
                 boxDto.getWeightLimit(),
                 boxDto.getBatteryCapacity(),
                 initialState
@@ -149,6 +159,15 @@ public class BoxServiceImpl implements BoxService {
         box.setState(newState);
         Box updatedBox = boxRepository.save(box);
         return mapToDto(updatedBox);
+    }
+
+    private String generateUniqueTxref() {
+        String generated;
+        do {
+            String suffix = UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase();
+            generated = "BOX-" + suffix;
+        } while (boxRepository.existsByTxref(generated));
+        return generated;
     }
 
     private BoxDto mapToDto(Box box) {

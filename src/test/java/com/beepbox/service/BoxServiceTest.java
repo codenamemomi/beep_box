@@ -9,7 +9,6 @@ import com.beepbox.exception.DuplicateTxrefException;
 import com.beepbox.exception.LowBatteryException;
 import com.beepbox.model.Box;
 import com.beepbox.model.BoxState;
-import com.beepbox.model.Item;
 import com.beepbox.repository.BoxRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +58,21 @@ class BoxServiceTest {
         assertEquals(400.0, created.getWeightLimit());
         assertEquals(80, created.getBatteryCapacity());
         assertEquals(BoxState.IDLE, created.getState());
+        verify(boxRepository, times(1)).save(any(Box.class));
+    }
+
+    @Test
+    @DisplayName("Should auto-generate txref when txref is omitted/null")
+    void createBox_AutoGenerateTxref() {
+        BoxDto dtoWithoutTxref = new BoxDto(350.0, 90, BoxState.IDLE);
+        when(boxRepository.existsByTxref(anyString())).thenReturn(false);
+        when(boxRepository.save(any(Box.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        BoxDto created = boxService.createBox(dtoWithoutTxref);
+
+        assertNotNull(created);
+        assertNotNull(created.getTxref());
+        assertTrue(created.getTxref().startsWith("BOX-"));
         verify(boxRepository, times(1)).save(any(Box.class));
     }
 

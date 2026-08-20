@@ -56,6 +56,21 @@ class BoxControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/v1/boxes - Register new box with auto-generated txref")
+    void createBox_AutoGenerateTxref_Success() throws Exception {
+        BoxDto boxDto = new BoxDto(350.0, 95, BoxState.IDLE);
+
+        mockMvc.perform(post("/api/v1/boxes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(boxDto)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.txref", startsWith("BOX-")))
+                .andExpect(jsonPath("$.data.weightLimit").value(350.0))
+                .andExpect(jsonPath("$.data.batteryCapacity").value(95));
+    }
+
+    @Test
     @DisplayName("POST /api/v1/boxes - Validation failure when txref > 20 chars or weight > 500g")
     void createBox_ValidationFailure() throws Exception {
         BoxDto invalidDto = new BoxDto("BOX-VERY-LONG-TXREF-NAME-OVER-20-CHARS", 600.0, 105, BoxState.IDLE);

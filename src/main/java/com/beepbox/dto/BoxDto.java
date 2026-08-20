@@ -4,7 +4,6 @@ import com.beepbox.model.BoxState;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -16,7 +15,6 @@ public class BoxDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotBlank(message = "Box txref is required")
     @Size(max = 20, message = "Box txref must not exceed 20 characters")
     private String txref;
 
@@ -42,6 +40,12 @@ public class BoxDto {
 
     public BoxDto(String txref, Double weightLimit, Integer batteryCapacity, BoxState state) {
         this.txref = txref;
+        this.weightLimit = weightLimit;
+        this.batteryCapacity = batteryCapacity;
+        this.state = state;
+    }
+
+    public BoxDto(Double weightLimit, Integer batteryCapacity, BoxState state) {
         this.weightLimit = weightLimit;
         this.batteryCapacity = batteryCapacity;
         this.state = state;
