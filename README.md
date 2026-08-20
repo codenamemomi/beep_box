@@ -24,6 +24,7 @@ BeepBox units carry and deliver small packages to remote locations. This REST se
    - **Item Name**: Allowed characters are letters, numbers, hyphen `-`, and underscore `_` (`^[a-zA-Z0-9\-_]+$`).
    - **Item Code**: Allowed characters are uppercase letters, numbers, and underscore `_` (`^[A-Z0-9_]+$`).
 4. **Reference Code Constraint**: Box `txref` is unique and limited to a maximum of 20 characters.
+5. **Automatic ID Generation**: Primary Key IDs (`id`) for both Boxes and Items are automatically assigned by the database upon creation/loading and marked `@JsonProperty(access = JsonProperty.Access.READ_ONLY)` on DTOs. Clients do not provide `id` fields in request payloads.
 
 ---
 

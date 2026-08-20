@@ -1,6 +1,7 @@
 package com.beepbox.dto;
 
 import com.beepbox.model.BoxState;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class BoxDto {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
     @NotBlank(message = "Box txref is required")
@@ -30,6 +32,7 @@ public class BoxDto {
 
     private BoxState state;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Double currentWeight;
 
     private List<ItemDto> items = new ArrayList<>();
